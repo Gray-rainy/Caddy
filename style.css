@@ -1,0 +1,335 @@
+/* ==========================
+   THEME VARIABLES
+========================== */
+:root {
+  --primary: #96EFFF;
+  --accent: #1ba7d1;
+  --text: #13151C;
+  --card-bg: rgba(255,255,255,0.85);
+}
+
+/* ==========================
+   RESET
+========================== */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* ==========================
+   BASE BODY
+========================== */
+body {
+  font-family: "Aptos", system-ui, sans-serif;
+  color: var(--text);
+  background: linear-gradient(180deg, #aee0f7 0%, #ffffff 100%);
+  min-height: 100vh;
+}
+
+/* Fix: dashboard/admin should NOT be centered */
+body:not(.login-page) {
+  display: block;
+}
+
+/* ==========================
+   LINKS & BUTTONS
+========================== */
+a {
+  color: var(--accent);
+  text-decoration: none;
+  font-weight: 600;
+}
+
+button,
+.btn {
+  padding: 10px 14px;
+  border-radius: 10px;
+  border: 2px solid #000;
+  background: linear-gradient(90deg, #aee0f7 0%, #cfe9d5 100%);
+  cursor: pointer;
+  font-weight: 700;
+  transition: all 0.2s;
+}
+
+button:hover,
+.btn:hover {
+  transform: translateY(-2px);
+}
+
+/* ==========================
+   TOP BAR
+========================== */
+.top-bar {
+  background: #ffffff;
+  padding: 20px 30px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.top-bar h1 {
+  font-size: 1.8rem;
+  color: var(--accent);
+}
+
+.logout-btn {
+  background: #cfe9d5;
+  padding: 10px 16px;
+  border-radius: 10px;
+  font-weight: bold;
+  color: #000;
+}
+
+/* ==========================
+   CONTAINERS & CARDS
+========================== */
+.container {
+  padding: 30px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+  justify-content: center;
+}
+
+.card {
+  background: var(--card-bg);
+  backdrop-filter: blur(6px);
+  padding: 22px;
+  border-radius: 14px;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+}
+
+/* ==========================
+   CLASS SELECTOR TABS
+========================== */
+.class-tabs {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 24px;
+}
+
+.class-tabs a {
+  padding: 10px 18px;
+  background: #e5e7eb;
+  border-radius: 999px;
+}
+
+.class-tabs a.active {
+  background: var(--accent);
+  color: white;
+}
+
+/* ==========================
+   DASHBOARD LAYOUT
+========================== */
+.dashboard {
+  display: flex;
+  gap: 30px;
+  padding: 20px;
+}
+
+.left {
+  flex: 3;
+}
+
+.right {
+  flex: 1;
+  background: rgba(255,255,255,0.4);
+  padding: 20px;
+  border-radius: 14px;
+}
+
+/* ==========================
+   SEATING / ATTENDANCE GRID
+========================== */
+.attendance-grid,
+.seating-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 16px;
+  margin-top: 16px;
+}
+
+.seat {
+  background: white;
+  padding: 14px;
+  border-radius: 12px;
+  font-weight: 700;
+  text-align: center;
+  box-shadow: 0 6px 14px rgba(0,0,0,0.1);
+}
+
+.seat.present {
+  background: #7ef18c;
+}
+
+.seat.absent {
+  background: #f56a6a;
+}
+
+.seat.empty {
+  background: #d0e2df;
+}
+
+/* ==========================
+   CONFIRM SECTION
+========================== */
+.confirm-section {
+  margin-top: 20px;
+  padding: 16px;
+  background: rgba(255,255,255,0.6);
+  border-radius: 12px;
+  text-align: center;
+}
+
+/* ==========================
+   LOGIN PAGE
+========================== */
+.login-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#card {
+  background: var(--card-bg);
+  border-radius: 20px;
+  padding: 50px 40px;
+  box-shadow: 0 12px 24px rgba(0,0,0,0.15);
+  text-align: center;
+  width: 420px;
+  animation: fadeIn 0.4s ease;
+}
+
+.login-card h2 {
+  font-size: 1.8rem;
+  color: #0b3d91;
+  margin-bottom: 20px;
+}
+
+.login-card input {
+  width: 90%;
+  padding: 12px;
+  margin: 10px 0;
+  border-radius: 10px;
+  border: 1.5px solid #ccc;
+}
+
+.login-card button {
+  width: 100%;
+}
+
+/* Error */
+.error {
+  color: #b91c1c;
+  font-weight: bold;
+  background: #ffe0e0;
+  padding: 10px;
+  border-radius: 8px;
+}
+
+/* ==========================
+   ADMIN PAGE
+========================== */
+.admin-container {
+  width: 95%;
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+.admin-card {
+  background: var(--card-bg);
+  padding: 24px;
+  border-radius: 14px;
+}
+
+.admin-table-wrapper {
+  max-height: 450px;
+  overflow-y: auto;
+  border-radius: 10px;
+}
+
+.admin-table-wrapper table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.admin-table-wrapper th,
+.admin-table-wrapper td {
+  padding: 10px;
+  border-bottom: 1px solid #cbd5e1;
+}
+
+/* ==========================
+   ANIMATIONS
+========================== */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.seating-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 16px;
+}
+
+.seat {
+  padding: 14px;
+  background: white;
+  border-radius: 12px;
+  font-weight: bold;
+  cursor: grab;
+  text-align: center;
+  user-select: none;
+}
+
+.seat.dragging {
+  opacity: 0.5;
+}
+
+.seat.over {
+  outline: 3px dashed #1ba7d1;
+}
+/* CLASS TABS BAR */
+.class-tabs {
+  display: flex;
+  gap: 10px;
+  padding: 12px;
+  background: #ffffff;
+  border-bottom: 1px solid #e0e0e0;
+
+  /* IMPORTANT FIX */
+  width: 100%;
+  height: auto;
+  flex-wrap: wrap;
+  align-items: center;
+
+  position: sticky;
+  top: 60px; /* height of top bar */
+  z-index: 5;
+}
+
+/* TAB BUTTONS */
+.class-tabs a {
+  padding: 8px 14px;
+  background: #f2f2f2;
+  border-radius: 6px;
+  text-decoration: none;
+  color: #333;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.class-tabs a:hover {
+  background: #e6e6e6;
+}
+
+.class-tabs a.active {
+  background: #2563eb;
+  color: white;
+}
