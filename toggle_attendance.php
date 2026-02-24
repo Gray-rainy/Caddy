@@ -10,33 +10,36 @@ if (!isset($_SESSION['teacher'])) {
 $data = json_decode(file_get_contents("php://input"), true);
 
 $student_id = (int)($data['student_id'] ?? 0);
-$class_id   = (int)($data['class_id'] ?? 0);
+$class_id   = (int)($data['class_id']   ?? 0);
 
 if (!$student_id || !$class_id) {
     http_response_code(400);
     exit;
 }
 
-/* Toggle logic */
+$today = date('Y-m-d');
+
+/* Check today's status */
 $stmt = $conn->prepare("
     SELECT status
     FROM attendance
     WHERE student_id = ?
-      AND class_id = ?
-      AND DATE(timestamp) = CURDATE()
+      AND class_id   = ?
+      AND `date`     = ?
 ");
-$stmt->bind_param("ii", $student_id, $class_id);
+$stmt->bind_param("iis", $student_id, $class_id, $today);
 $stmt->execute();
-$result = $stmt->get_result()->fetch_assoc();
+$row = $stmt->get_result()->fetch_assoc();
 
-$newStatus = ($result && $result['status'] === 'Present') ? 'Absent' : 'Present';
+$newStatus = ($row && $row['status'] === 'Present') ? 'Absent' : 'Present';
 
+/* Upsert — unique key is now (student_id, class_id, date) */
 $stmt = $conn->prepare("
-    INSERT INTO attendance (student_id, class_id, status)
-    VALUES (?, ?, ?)
+    INSERT INTO attendance (student_id, class_id, `date`, status)
+    VALUES (?, ?, ?, ?)
     ON DUPLICATE KEY UPDATE status = ?
 ");
-$stmt->bind_param("iiss", $student_id, $class_id, $newStatus, $newStatus);
+$stmt->bind_param("iisss", $student_id, $class_id, $today, $newStatus, $newStatus);
 $stmt->execute();
 
 echo json_encode(['status' => $newStatus]);

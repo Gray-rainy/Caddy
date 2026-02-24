@@ -5,13 +5,7 @@
 
 header("Content-Type: application/json");
 
-// ---------- DB (LIMITED USER) ----------
-$conn = new mysqli(
-    "localhost",
-    "esp32",
-    "esp32_pass",
-    "esp32_mc_db"
-);
+$conn = new mysqli("localhost", "esp32", "esp32_pass", "esp32_mc_db");
 
 if ($conn->connect_error) {
     http_response_code(500);
@@ -19,7 +13,6 @@ if ($conn->connect_error) {
     exit;
 }
 
-// ---------- READ JSON ----------
 $input = json_decode(file_get_contents("php://input"), true);
 
 if (!isset($input['uid'], $input['class_id'])) {
@@ -28,10 +21,11 @@ if (!isset($input['uid'], $input['class_id'])) {
     exit;
 }
 
-$uid = strtoupper(trim($input['uid']));
+$uid      = strtoupper(trim($input['uid']));
 $class_id = (int)$input['class_id'];
+$today    = date('Y-m-d');
 
-// ---------- FIND STUDENT ----------
+/* Find student */
 $stmt = $conn->prepare("
     SELECT id, student_name
     FROM students
@@ -50,7 +44,7 @@ if (!$student) {
 
 $student_id = $student['id'];
 
-// ---------- VERIFY CLASS MEMBERSHIP ----------
+/* Verify class membership */
 $stmt = $conn->prepare("
     SELECT 1
     FROM student_classes
@@ -65,36 +59,36 @@ if ($stmt->get_result()->num_rows === 0) {
     exit;
 }
 
-// ---------- PREVENT DUPLICATE SCANS ----------
+/* Prevent duplicate scans for today */
 $stmt = $conn->prepare("
     SELECT 1
     FROM attendance
     WHERE student_id = ?
-      AND class_id = ?
-      AND DATE(timestamp) = CURDATE()
+      AND class_id   = ?
+      AND `date`     = ?
 ");
-$stmt->bind_param("ii", $student_id, $class_id);
+$stmt->bind_param("iis", $student_id, $class_id, $today);
 $stmt->execute();
 
 if ($stmt->get_result()->num_rows > 0) {
     http_response_code(200);
     echo json_encode([
-        "status" => "already_marked",
+        "status"  => "already_marked",
         "student" => $student['student_name']
     ]);
     exit;
 }
 
-// ---------- INSERT ATTENDANCE ----------
+/* Insert attendance for today */
 $stmt = $conn->prepare("
-    INSERT INTO attendance (student_id, class_id, status)
-    VALUES (?, ?, 'Present')
+    INSERT INTO attendance (student_id, class_id, `date`, status)
+    VALUES (?, ?, ?, 'Present')
 ");
-$stmt->bind_param("ii", $student_id, $class_id);
+$stmt->bind_param("iis", $student_id, $class_id, $today);
 $stmt->execute();
 
 http_response_code(200);
 echo json_encode([
-    "status" => "success",
+    "status"  => "success",
     "student" => $student['student_name']
 ]);
